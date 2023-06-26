@@ -8,6 +8,7 @@
 #include <cmath>
 #include <iostream>
 #include <cstdlib>
+#include "ad.h"
 using namespace std;
 
 namespace %(namespace)s_%(model_name)s {

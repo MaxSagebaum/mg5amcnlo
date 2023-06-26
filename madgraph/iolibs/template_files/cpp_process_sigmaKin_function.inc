@@ -4,8 +4,8 @@ static bool goodhel[ncomb] = {ncomb * false};
 static int ntry = 0, sum_hel = 0, ngood = 0;
 static int igood[ncomb];
 static int jhel;
-std::complex<double> **wfs;
-double t[nprocesses];
+std::complex<Real> **wfs;
+Real t[nprocesses];
 // Helicities for the process
 %(helicity_matrix)s
 // Denominators: spins, colors and identical particles
@@ -30,7 +30,7 @@ if (sum_hel == 0 || ntry < 10){
       calculate_wavefunctions(perm, helicities[ihel]);
       %(get_matrix_t_lines)s
 %(get_mirror_matrix_lines)s
-      double tsum = 0;
+      Real tsum = 0;
       for(int iproc = 0;iproc < nprocesses; iproc++){
          matrix_element[iproc]+=t[iproc];
          tsum += t[iproc];
@@ -52,7 +52,7 @@ else
   for(int j=0; j < sum_hel; j++){
     jhel++;
     if (jhel >= ngood) jhel=0;
-    double hwgt = double(ngood)/double(sum_hel);
+    Real hwgt = Real(ngood)/Real(sum_hel);
     int ihel = igood[jhel];
     calculate_wavefunctions(perm, helicities[ihel]);
     %(get_matrix_t_lines)s

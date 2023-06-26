@@ -5,19 +5,19 @@ using namespace std;
 class Random
 {
   public:
-    double ranmar();
+    Real ranmar();
     void rmarin(int ij, int kl);
     
   private:
-    double ranu[98];
-    double ranc, rancd, rancm;
+    Real ranu[98];
+    Real ranc, rancd, rancm;
     int iranmr, jranmr;
 };
 
 
-double rn(int idummy);
+Real rn(int idummy);
 
-vector<double*> get_momenta(int ninitial, double energy, 
-				    vector<double> masses, double& wgt);
+vector<Real*> get_momenta(int ninitial, Real energy,
+				    vector<Real> masses, Real& wgt);
 
-vector<double*> rambo(double et, vector<double>& xm, double& wt);
+vector<Real*> rambo(Real et, vector<Real>& xm, Real& wt);

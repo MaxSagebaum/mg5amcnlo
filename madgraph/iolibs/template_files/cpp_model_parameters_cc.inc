@@ -5,6 +5,8 @@
 
 #include <iostream>
 #include <iomanip>
+
+#include "ad.h"
 #include "Parameters_%(model_name)s.h"
 
     // Initialize static instance

@@ -18,10 +18,10 @@ public:
   virtual void initProc(string param_card_name); 
 
   // Get and set momenta for matrix element evaluation
-  void setMomenta(vector<double*>& momenta){p = momenta;}
+  void setMomenta(vector<Real*>& momenta){p = momenta;}
 
   // Get amplitude for one colorflow
-  std::complex<double> get_jamp(int T);
+  std::complex<Real> get_jamp(int T);
   
   // Info on number of colorflows
   int NCol();
@@ -43,12 +43,12 @@ public:
   Parameters_%(model_name)s* pars;
 
   // vector with external particle masses
-  vector<double> mME;
+  vector<Real> mME;
 
   // vector with momenta (to be changed each event)
-  vector<double*> p;
+  vector<Real*> p;
 
   // Color flows, used when selecting color
-  std::complex<double> jamp[%(ncolor)d];
+  std::complex<Real> jamp[%(ncolor)d];
 
 };

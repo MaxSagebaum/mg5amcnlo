@@ -355,13 +355,13 @@ class OneProcessExporterCPP(object):
                           """// Calculate wavefunctions
                           void calculate_wavefunctions(const int perm[], const int hel[]);
                           static const int nwavefuncs = %d;
-                          std::complex<double> w[nwavefuncs][18];
+                          std::complex<Real> w[nwavefuncs][18];
                           static const int namplitudes = %d;
-                          std::complex<double> amp[namplitudes];""" % \
+                          std::complex<Real> amp[namplitudes];""" % \
                           (len(self.wavefunctions),
                            len(self.amplitudes.get_all_amplitudes()))
             replace_dict['all_matrix_definitions'] = \
-                           "\n".join(["double matrix_%s();" % \
+                           "\n".join(["Real matrix_%s();" % \
                                       me.get('processes')[0].shell_string().\
                                       replace("0_", "") \
                                       for me in self.matrix_elements])
@@ -373,7 +373,7 @@ class OneProcessExporterCPP(object):
                                      replace("0_", "") \
                                      for me in self.matrix_elements])
             replace_dict['all_matrix_definitions'] = \
-                           "\n".join(["double matrix_%s(const int hel[]);" % \
+                           "\n".join(["Real matrix_%s(const int hel[]);" % \
                                       me.get('processes')[0].shell_string().\
                                       replace("0_", "") \
                                       for me in self.matrix_elements])
@@ -475,7 +475,7 @@ class OneProcessExporterCPP(object):
         for part in matrix_element.get_external_wavefunctions():
             initProc_lines.append("mME.push_back(pars->%s);" % part.get('mass'))
         for i, colamp in enumerate(color_amplitudes):
-            initProc_lines.append("jamp2[%d] = new double[%d];" % \
+            initProc_lines.append("jamp2[%d] = new Real[%d];" % \
                                   (i, len(colamp)))
 
         return "\n".join(initProc_lines)
@@ -675,7 +675,7 @@ class OneProcessExporterCPP(object):
             wavefunctions = matrix_element.get_all_wavefunctions()
             replace_dict['all_wavefunction_calls'] = \
                          """const int nwavefuncs = %d;
-                         std::complex<double> w[nwavefuncs][18];
+                         std::complex<Real> w[nwavefuncs][18];
                          """ % len(wavefunctions)+ \
                          self.get_calculate_wavefunctions(wavefunctions, [])
 
@@ -796,12 +796,12 @@ class OneProcessExporterCPP(object):
         rows in chunks of size n."""
 
         if not matrix_element.get('color_matrix'):
-            return "\n".join(["static const double denom[1] = {1.};",
-                              "static const double cf[1][1] = {1.};"])
+            return "\n".join(["static const Real denom[1] = {1.};",
+                              "static const Real cf[1][1] = {1.};"])
         else:
             color_denominators = matrix_element.get('color_matrix').\
                                                  get_line_denominators()
-            denom_string = "static const double denom[ncolor] = {%s};" % \
+            denom_string = "static const Real denom[ncolor] = {%s};" % \
                            ",".join(["%i" % denom for denom in color_denominators])
 
             matrix_strings = []
@@ -813,7 +813,7 @@ class OneProcessExporterCPP(object):
 
                 matrix_strings.append("{%s}" % \
                                      ",".join(["%d" % i for i in num_list]))
-            matrix_string = "static const double cf[ncolor][ncolor] = {" + \
+            matrix_string = "static const Real cf[ncolor][ncolor] = {" + \
                             ",".join(matrix_strings) + "};"
             return "\n".join([denom_string, matrix_string])
 
@@ -925,7 +925,7 @@ class OneProcessExporterMatchbox(OneProcessExporterCPP):
         rows in chunks of size n."""
 
         if not matrix_element.get('color_matrix'):
-            return "\n".join(["static const double res[1][1] = {-1.};"])
+            return "\n".join(["static const Real res[1][1] = {-1.};"])
         
         #start the real work
         color_denominators = matrix_element.get('color_matrix').\
@@ -958,7 +958,7 @@ class OneProcessExporterMatchbox(OneProcessExporterCPP):
             #format the output
             matrix_strings.append('{%s}' % ','.join(curr_color))
 
-        matrix_string = 'static const double res[%s][%s] = {%s};' % \
+        matrix_string = 'static const Real res[%s][%s] = {%s};' % \
             (len(color_denominators), max_len, ",".join(matrix_strings))    
 
         return matrix_string
@@ -1059,13 +1059,13 @@ class OneProcessExporterPythia8(OneProcessExporterCPP):
                           """// Calculate wavefunctions
                           void calculate_wavefunctions(const int perm[], const int hel[]);
                           static const int nwavefuncs = %d;
-                          std::complex<double> w[nwavefuncs][18];
+                          std::complex<Real> w[nwavefuncs][18];
                           static const int namplitudes = %d;
-                          std::complex<double> amp[namplitudes];""" % \
+                          std::complex<Real> amp[namplitudes];""" % \
                           (len(self.wavefunctions),
                            len(self.amplitudes.get_all_amplitudes()))
             replace_dict['all_matrix_definitions'] = \
-                           "\n".join(["double matrix_%s();" % \
+                           "\n".join(["Real matrix_%s();" % \
                                       me.get('processes')[0].shell_string().\
                                       replace("0_", "") \
                                       for me in self.matrix_elements])
@@ -1077,7 +1077,7 @@ class OneProcessExporterPythia8(OneProcessExporterCPP):
                                      replace("0_", "") \
                                      for me in self.matrix_elements])
             replace_dict['all_matrix_definitions'] = \
-                           "\n".join(["double matrix_%s(const int hel[]);" % \
+                           "\n".join(["Real matrix_%s(const int hel[]);" % \
                                       me.get('processes')[0].shell_string().\
                                       replace("0_", "") \
                                       for me in self.matrix_elements])
@@ -1314,7 +1314,7 @@ class OneProcessExporterPythia8(OneProcessExporterCPP):
         initProc_lines.append("mtauME = %s;" % tauMassiveME)
             
         for i, me in enumerate(self.matrix_elements):
-            initProc_lines.append("jamp2[%d] = new double[%d];" % \
+            initProc_lines.append("jamp2[%d] = new Real[%d];" % \
                                   (i, len(color_amplitudes[i])))
 
         return "\n".join(initProc_lines)
@@ -1418,8 +1418,8 @@ class OneProcessExporterPythia8(OneProcessExporterCPP):
                                   ",".join(["{" + ",".join([str(id) for id \
                                             in ids]) + "}" for ids \
                                             in final_mirror_id_list])))
-            res_lines.append("vector<double> probs;")
-            res_lines.append("double sum = %s;" % "+".join(me_weight))
+            res_lines.append("vector<Real> probs;")
+            res_lines.append("Real sum = %s;" % "+".join(me_weight))
             for me in me_weight:
                 res_lines.append("probs.push_back(%s/sum);" % me)
             res_lines.append("int choice = rndmPtr->pick(probs);")
@@ -1475,8 +1475,8 @@ class OneProcessExporterPythia8(OneProcessExporterCPP):
                                                       repr_dict, self.ninitial)
                 # Select a color flow
                 ncolor = len(me.get('color_basis'))
-                res_lines.append("""vector<double> probs;
-                  double sum = %s;
+                res_lines.append("""vector<Real> probs;
+                  Real sum = %s;
                   for(int i=0;i<ncolor[%i];i++)
                   probs.push_back(jamp2[%i][i]/sum);
                   int ic = rndmPtr->pick(probs);""" % \
@@ -1528,8 +1528,8 @@ class OneProcessExporterPythia8(OneProcessExporterCPP):
                                                       repr_dict, self.ninitial)
                 # Select a color flow
                 ncolor = len(me.get('color_basis'))
-                res_lines.append("""vector<double> probs;
-                  double sum = %s;
+                res_lines.append("""vector<Real> probs;
+                  Real sum = %s;
                   for(int i=0;i<ncolor[%i];i++)
                   probs.push_back(jamp2[%i][i]/sum);
                   int ic = rndmPtr->pick(probs);""" % \
@@ -1604,7 +1604,7 @@ class ProcessExporterCPP(VirtualExporter):
     
     oneprocessclass = OneProcessExporterCPP
     s= _file_path + 'iolibs/template_files/'
-    from_template = {'src': [s+'rambo.h', s+'rambo.cc', s+'read_slha.h', s+'read_slha.cc'],
+    from_template = {'src': [s+'rambo.h', s+'rambo.cc', s+'ad.h', s+'ad.cpp', s+'read_slha.h', s+'read_slha.cc'],
                      'SubProcesses': [s+'check_sa.cpp']}
     to_link_in_P = ['check_sa.cpp', 'Makefile']
     template_src_make = pjoin(_file_path, 'iolibs', 'template_files','Makefile_sa_cpp_src')
@@ -1903,12 +1903,12 @@ def coeff(ff_number, frac, is_imaginary, Nc_power, Nc_value=3):
 
     if total_coeff == 1:
         if is_imaginary:
-            return '+std::complex<double>(0,1)*'
+            return '+std::complex<Real>(0,1)*'
         else:
             return '+'
     elif total_coeff == -1:
         if is_imaginary:
-            return '-std::complex<double>(0,1)*'
+            return '-std::complex<Real>(0,1)*'
         else:
             return '-'
 
@@ -1919,7 +1919,7 @@ def coeff(ff_number, frac, is_imaginary, Nc_power, Nc_value=3):
         res_str = res_str + '/%i.' % total_coeff.denominator
 
     if is_imaginary:
-        res_str = res_str + '*std::complex<double>(0,1)'
+        res_str = res_str + '*std::complex<Real>(0,1)'
 
     return res_str + '*'
 
@@ -1935,8 +1935,8 @@ class UFOModelConverterCPP(object):
     namespace = 'MG5'
 
     # Dictionary from Python type to C++ type
-    type_dict = {"real": "double",
-                 "complex": "std::complex<double>"}
+    type_dict = {"real": "Real",
+                 "complex": "std::complex<Real>"}
 
     # Regular expressions for cleaning of lines from Aloha files
     compiler_option_re = re.compile(r'^#\w')
@@ -2037,6 +2037,7 @@ class UFOModelConverterCPP(object):
                               % (param.name, param.lhablock.lower(), param.value.real)
             else:
                 raise MadGraph5Error("Only support for SLHA blocks with 1 or 2 indices")
+            expression += "\nad::addInput(\"%s\", %s);" % (param.name, param.name)
             self.params_indep.insert(0,
                                    base_objects.ModelVariable(param.name,
                                                    expression,
@@ -2430,7 +2431,7 @@ class UFOModelConverterPythia8(UFOModelConverterCPP):
                     else:
                         # This is a BSM parameter which is read from SLHA
                         if len(param.lhacode) == 1:
-                            expression = "if(!slhaPtr->getEntry<double>(\"%s\", %d, %s)){\n" % \
+                            expression = "if(!slhaPtr->getEntry<Real>(\"%s\", %d, %s)){\n" % \
                                          (param.lhablock.lower(),
                                           param.lhacode[0],
                                           param.name) + \
@@ -2438,7 +2439,7 @@ class UFOModelConverterPythia8(UFOModelConverterCPP):
                                           + "%s = %e;}") % (param.name, param.value.real,
                                                            param.name, param.value.real)
                         elif len(param.lhacode) == 2:
-                            expression = "if(!slhaPtr->getEntry<double>(\"%s\", %d, %d, %s)){\n" % \
+                            expression = "if(!slhaPtr->getEntry<Real>(\"%s\", %d, %d, %s)){\n" % \
                                          (param.lhablock.lower(),
                                           param.lhacode[0],
                                           param.lhacode[1],
@@ -2447,7 +2448,7 @@ class UFOModelConverterPythia8(UFOModelConverterCPP):
                                           + "%s = %e;}") % (param.name, param.value.real,
                                                            param.name, param.value.real)
                         elif len(param.lhacode) == 3:
-                            expression = "if(!slhaPtr->getEntry<double>(\"%s\", %d, %d, %d, %s)){\n" % \
+                            expression = "if(!slhaPtr->getEntry<Real>(\"%s\", %d, %d, %d, %s)){\n" % \
                                          (param.lhablock.lower(),
                                           param.lhacode[0],
                                           param.lhacode[1],

@@ -4,7 +4,7 @@
 # 1 "/Users/omatt/Downloads/cpp_process_matrix.inc"
 
 
-std::complex<double> %(process_class_name)s::get_jamp(int i) {
+std::complex<Real> %(process_class_name)s::get_jamp(int i) {
 return jamp[i];
 }
 

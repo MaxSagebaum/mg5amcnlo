@@ -17,22 +17,22 @@ public:
   virtual void sigmaKin();
 
   // Evaluate sigmaHat(sHat). 
-  virtual double sigmaHat();
+  virtual Real sigmaHat();
 
   // Info on the subprocess.
   virtual string name()    const {return "%(process_definition)s";}
 
   virtual int    code()    const {return %(process_code)s;}
 
-  const vector<double>& getMasses() const {return mME;}
+  const vector<Real>& getMasses() const {return mME;}
 
   // Get and set momenta for matrix element evaluation
-  vector<double*> getMomenta(){return p;}
-  void setMomenta(vector<double*>& momenta){p = momenta;}
+  vector<Real*> getMomenta(){return p;}
+  void setMomenta(vector<Real*>& momenta){p = momenta;}
   void setInitial(int inid1, int inid2){id1 = inid1; id2 = inid2;}
 
   // Get matrix element vector
-  const double* getMatrixElements() const {return matrix_element;}
+  const Real* getMatrixElements() const {return matrix_element;}
 
   // Constants for array limits
   static const int ninitial = %(ninitial)d;
@@ -46,19 +46,19 @@ private:
   %(all_matrix_definitions)s
 
   // Store the matrix element value from sigmaKin
-  double matrix_element[nprocesses];
+  Real matrix_element[nprocesses];
 
   // Color flows, used when selecting color
-  double* jamp2[nprocesses];
+  Real* jamp2[nprocesses];
 
   // Pointer to the model parameters
   Parameters_%(model_name)s* pars;
 
   // vector with external particle masses
-  vector<double> mME;
+  vector<Real> mME;
 
   // vector with momenta (to be changed each event)
-  vector<double*> p;
+  vector<Real*> p;
   // Initial particle ids
   int id1, id2;
 

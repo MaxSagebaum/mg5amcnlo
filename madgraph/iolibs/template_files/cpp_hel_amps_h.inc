@@ -8,6 +8,7 @@
 
 #include <cmath> 
 #include <complex>
+#include "ad.h"
 
 using namespace std;
 

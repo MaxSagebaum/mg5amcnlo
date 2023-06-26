@@ -6,8 +6,8 @@ static bool goodhel[ncomb] = {ncomb * false};
 static int ntry = 0, sum_hel = 0, ngood = 0;
 static int igood[ncomb];
 static int jhel;
-std::complex<double> **wfs;
-double t;
+std::complex<Real> **wfs;
+Real t;
 // Helicities for the process
 %(helicity_matrix)s
 // Denominator: spins, colors and identical particles
@@ -41,7 +41,7 @@ else
   for(int j=0; j < sum_hel; j++){
     jhel++;
     if (jhel >= ngood) jhel=0;
-    double hwgt = double(ngood)/double(sum_hel);
+    Real hwgt = Real(ngood)/Real(sum_hel);
     int ihel = igood[jhel];
     t=matrix_%(proc_name)s(helicities[ihel]);
     matrix_element[%(proc_number)d] += t*hwgt;

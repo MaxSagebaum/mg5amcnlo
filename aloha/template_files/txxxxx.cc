@@ -1,14 +1,15 @@
 #include <complex>
 #include <cmath> 
 #include "aloha_aux_functions.h"
+#include "ad.h"
 using namespace std;
 #include <iostream>
 #include <cstdlib>
 
-void txxxxx(double p[4], double tmass, int nhel, int nst, complex<double> tc[18])
+void txxxxx(Real p[4], Real tmass, int nhel, int nst, complex<Real> tc[18])
 {
-	complex<double> ft[6][4], ep[4], em[4], e0[4];
-	double pt, pt2, pp, pzpt, emp, sqh, sqs;
+	complex<Real> ft[6][4], ep[4], em[4], e0[4];
+	Real pt, pt2, pp, pzpt, emp, sqh, sqs;
 	int i, j;
 	
 	sqh = sqrt( 0.5);
@@ -18,34 +19,34 @@ void txxxxx(double p[4], double tmass, int nhel, int nst, complex<double> tc[18]
 	pp = min( p[0], sqrt( pt2+p[3]*p[3]) );
 	pt = min( pp, sqrt( pt2) );
 	
-	ft[4][0] = complex<double>( p[0]*nst, p[3]*nst );
-	ft[5][0] = complex<double>( p[1]*nst, p[2]*nst );
+	ft[4][0] = complex<Real>( p[0]*nst, p[3]*nst );
+	ft[5][0] = complex<Real>( p[1]*nst, p[2]*nst );
 	
 	// construct eps+
 	if( nhel >= 0 )
 	{
 		if( pp == 0 )
 		{
-			ep[0] = complex<double>( 0, 0 );
-			ep[1] = complex<double>( -sqh, 0 );
-			ep[2] = complex<double>( 0, nst*sqh );
-			ep[3] = complex<double>( 0, 0 );
+			ep[0] = complex<Real>( 0, 0 );
+			ep[1] = complex<Real>( -sqh, 0 );
+			ep[2] = complex<Real>( 0, nst*sqh );
+			ep[3] = complex<Real>( 0, 0 );
 		}
 		else
 		{
-			ep[0] = complex<double>( 0, 0 );
-			ep[3] = complex<double>( pt/pp*sqh, 0 );
+			ep[0] = complex<Real>( 0, 0 );
+			ep[3] = complex<Real>( pt/pp*sqh, 0 );
 			
 			if( pt != 0 )
 			{
 				pzpt = p[3]/(pp*pt)*sqh;
-				ep[1] = complex<double>( -p[1]*pzpt, -nst*p[2]/pt*sqh );
-				ep[2] = complex<double>( -p[2]*pzpt, nst*p[1]/pt*sqh );
+				ep[1] = complex<Real>( -p[1]*pzpt, -nst*p[2]/pt*sqh );
+				ep[2] = complex<Real>( -p[2]*pzpt, nst*p[1]/pt*sqh );
 			}
 			else
 			{
-				ep[1] = complex<double>( -sqh, 0 );
-				ep[2] = complex<double>( 0, nst*Sgn(sqh,p[3]) );
+				ep[1] = complex<Real>( -sqh, 0 );
+				ep[2] = complex<Real>( 0, nst*Sgn(sqh,p[3]) );
 			}
 		}
 		
@@ -56,26 +57,26 @@ void txxxxx(double p[4], double tmass, int nhel, int nst, complex<double> tc[18]
 	{
 		if( pp == 0 )
 		{
-			em[0] = complex<double>( 0, 0 );
-			em[1] = complex<double>( sqh, 0 );
-			em[2] = complex<double>( 0, nst*sqh );
-			em[3] = complex<double>( 0, 0 );
+			em[0] = complex<Real>( 0, 0 );
+			em[1] = complex<Real>( sqh, 0 );
+			em[2] = complex<Real>( 0, nst*sqh );
+			em[3] = complex<Real>( 0, 0 );
 		}
 		else
 		{
-			em[0] = complex<double>( 0, 0 );
-			em[3] = complex<double>( -pt/pp*sqh, 0 );
+			em[0] = complex<Real>( 0, 0 );
+			em[3] = complex<Real>( -pt/pp*sqh, 0 );
 			
 			if( pt != 0 )
 			{
 				pzpt = -p[3]/(pp*pt)*sqh;
-				em[1] = complex<double>( -p[1]*pzpt, -nst*p[2]/pt*sqh );
-				em[2] = complex<double>( -p[2]*pzpt,  nst*p[1]/pt*sqh );
+				em[1] = complex<Real>( -p[1]*pzpt, -nst*p[2]/pt*sqh );
+				em[2] = complex<Real>( -p[2]*pzpt,  nst*p[1]/pt*sqh );
 			}
 			else
 			{
-				em[1] = complex<double>( sqh, 0 );
-				em[2] = complex<double>( 0, nst*Sgn(sqh,p[3]) );
+				em[1] = complex<Real>( sqh, 0 );
+				em[2] = complex<Real>( 0, nst*Sgn(sqh,p[3]) );
 			}
 		}
 	}
@@ -85,26 +86,26 @@ void txxxxx(double p[4], double tmass, int nhel, int nst, complex<double> tc[18]
 	{
 		if( pp == 0 )
 		{
-			e0[0] = complex<double>( 0, 0 );
-			e0[1] = complex<double>( 0, 0 );
-			e0[2] = complex<double>( 0, 0 );
-			e0[3] = complex<double>( 1, 0 );
+			e0[0] = complex<Real>( 0, 0 );
+			e0[1] = complex<Real>( 0, 0 );
+			e0[2] = complex<Real>( 0, 0 );
+			e0[3] = complex<Real>( 1, 0 );
 		}
 		else
 		{
 			emp = p[0]/(tmass*pp);
-			e0[0] = complex<double>( pp/tmass, 0 );
-			e0[3] = complex<double>( p[3]*emp, 0 );
+			e0[0] = complex<Real>( pp/tmass, 0 );
+			e0[3] = complex<Real>( p[3]*emp, 0 );
 			
 			if( pt != 0 )
 			{
-				e0[1] = complex<double>( p[1]*emp, 0 );
-				e0[2] = complex<double>( p[2]*emp, 0 );
+				e0[1] = complex<Real>( p[1]*emp, 0 );
+				e0[2] = complex<Real>( p[2]*emp, 0 );
 			}
 			else
 			{
-				e0[1] = complex<double>( 0, 0 );
-				e0[2] = complex<double>( 0, 0 );
+				e0[1] = complex<Real>( 0, 0 );
+				e0[2] = complex<Real>( 0, 0 );
 			}
 		}
 	}

@@ -4,16 +4,17 @@
 #include <cmath>
 #include <stdlib.h>
 
+#include "ad.h"
 #include "rambo.h"
 
 using namespace std;
 
-double Random::ranmar(){
+Real Random::ranmar(){
 /*     -----------------
  * universal random number generator proposed by marsaglia and zaman
  * in report fsu-scri-87-50
- * in this version rvec is a double precision variable. */
-  double uni = ranu[iranmr] - ranu[jranmr];
+ * in this version rvec is a Real precision variable. */
+  Real uni = ranu[iranmr] - ranu[jranmr];
   if(uni < 0) uni = uni + 1;
   ranu[iranmr] = uni;
   iranmr = iranmr - 1;
@@ -41,8 +42,8 @@ void Random::rmarin(int ij, int kl){
   int k = (kl/169) % 178 + 1;
   int l = kl % 169;
   for (int ii = 1; ii < 98; ii++){
-    double s =  0;
-    double t = .5;
+    Real s =  0;
+    Real t = .5;
     for (int jj = 1; jj < 25; jj++){
       int m = ((i*j % 179)*k) % 179;
       i = j;
@@ -61,9 +62,9 @@ void Random::rmarin(int ij, int kl){
   jranmr = 33;
 }
 
-double rn(int idummy){
+Real rn(int idummy){
   static Random rand;
-  double ran;
+  Real ran;
   static int init = 1;
   // Prevent unused variable warning
   if(false) idummy=idummy;
@@ -79,26 +80,26 @@ double rn(int idummy){
   return ran;
 }
 
-vector<double*> get_momenta(int ninitial, double energy, 
-			    vector<double> masses, double& wgt)
+vector<Real*> get_momenta(int ninitial, Real energy,
+			    vector<Real> masses, Real& wgt)
 {
 //---- auxiliary function to change convention between MadGraph5_aMC@NLO and rambo
 //---- four momenta. 	  
   int nexternal = masses.size();
   int nfinal = nexternal - ninitial;
-  double e2=pow(energy, 2);
-  double m1 = masses[0];
+  Real e2=pow(energy, 2);
+  Real m1 = masses[0];
 
   if (ninitial == 1){
 // Momenta for the incoming particle
-    vector<double*> p(1, new double[4]);
+    vector<Real*> p(1, new Real[4]);
     p[0][0] = m1;
     p[0][1] = 0.;
     p[0][2] = 0.;
     p[0][3] = 0.;
 
-    vector<double> finalmasses(++masses.begin(), masses.end());
-    vector<double*> p_rambo = rambo(m1, finalmasses, wgt);
+    vector<Real> finalmasses(++masses.begin(), masses.end());
+    vector<Real*> p_rambo = rambo(m1, finalmasses, wgt);
     p.insert(++p.begin(), p_rambo.begin(), p_rambo.end());
 
     return p;
@@ -112,38 +113,38 @@ vector<double*> get_momenta(int ninitial, double energy,
   if(nfinal == 1)
     energy = m1;
         
-  double m2 = masses[1];
+  Real m2 = masses[1];
 
-  double mom = sqrt((pow(e2,2) - 2*e2*pow(m1,2) + pow(m1,4) - 2*e2*pow(m2,2) -
+  Real mom = sqrt((pow(e2,2) - 2*e2*pow(m1,2) + pow(m1,4) - 2*e2*pow(m2,2) -
 		     2*pow(m1,2)*pow(m2,2) + pow(m2,4)) / (4*e2));
-  double energy1 = sqrt(pow(mom,2)+pow(m1,2));
-  double energy2 = sqrt(pow(mom,2)+pow(m2,2));
+  Real energy1 = sqrt(pow(mom,2)+pow(m1,2));
+  Real energy2 = sqrt(pow(mom,2)+pow(m2,2));
 // Set momenta for incoming particles
-  vector<double*> p(1, new double[4]);
+  vector<Real*> p(1, new Real[4]);
   p[0][0] = energy1;
   p[0][1] = 0;
   p[0][2] = 0;
   p[0][3] = mom;
-  p.push_back(new double[4]);
+  p.push_back(new Real[4]);
   p[1][0] = energy2;
   p[1][1] = 0;
   p[1][2] = 0;
   p[1][3] = -mom;
   
   if (nfinal == 1){
-    p.push_back(new double[4]);
+    p.push_back(new Real[4]);
     p[2][0] = energy;
     wgt = 1;
     return p;
   }
-  vector<double> finalmasses(++(++masses.begin()), masses.end());
-  vector<double*> p_rambo = rambo(energy, finalmasses, wgt);
+  vector<Real> finalmasses(++(++masses.begin()), masses.end());
+  vector<Real*> p_rambo = rambo(energy, finalmasses, wgt);
   p.insert(++(++p.begin()), p_rambo.begin(), p_rambo.end());
   return p;
 }
 
 
-vector<double*> rambo(double et, vector<double>& xm, double& wt){
+vector<Real*> rambo(Real et, vector<Real>& xm, Real& wt){
 /**********************************************************************
  *                       rambo                                         *
  *    ra(ndom)  m(omenta)  b(eautifully)  o(rganized)                  *
@@ -160,26 +161,26 @@ vector<double*> rambo(double et, vector<double>& xm, double& wt){
  *    wt = weight of the event                                         *
  ***********************************************************************/
   int n = xm.size();
-  vector<double*> q, p;
-  vector<double> z(n), r(4), b(3), p2(n), xm2(n), e(n), v(n);
+  vector<Real*> q, p;
+  vector<Real> z(n), r(4), b(3), p2(n), xm2(n), e(n), v(n);
   static vector<int> iwarn(5, 0);
-  static double acc = 1e-14;
+  static Real acc = 1e-14;
   static int itmax = 6,ibegin = 0;
-  static double twopi=8.*atan(1.);
-  static double po2log=log(twopi/4.);
+  static Real twopi=8.*atan(1.);
+  static Real po2log=log(twopi/4.);
 
   for(int i=0; i < n; i++){
-    q.push_back(new double[4]);
-    p.push_back(new double[4]);
+    q.push_back(new Real[4]);
+    p.push_back(new Real[4]);
   }
 // initialization step: factorials for the phase space weight
   if(ibegin==0){
     ibegin=1;
     z[1]=po2log;
     for(int k=2;k < n;k++)
-      z[k]=z[k-1]+po2log-2.*log(double(k-1));
+      z[k]=z[k-1]+po2log-2.*log(Real(k-1));
     for(int k=2;k < n;k++)
-      z[k]=(z[k]-log(double(k)));
+      z[k]=(z[k]-log(Real(k)));
   }
 // check on the number of particles
   if(n<1 || n>101){
@@ -187,7 +188,7 @@ vector<double*> rambo(double et, vector<double>& xm, double& wt){
     exit(-1);
   }
 // check whether total energy is sufficient; count nonzero masses
-  double xmt=0.;
+  Real xmt=0.;
   int nm=0;
   for(int i=0; i<n; i++){
     if(xm[i]!=0.) nm=nm+1;
@@ -201,12 +202,12 @@ vector<double*> rambo(double et, vector<double>& xm, double& wt){
 
 // generate n massless momenta in infinite phase space
   for(int i=0; i<n;i++){
-    double r1=rn(1);
-    double c=2.*r1-1.;
-    double s=sqrt(1.-c*c);
-    double f=twopi*rn(2);
+    Real r1=rn(1);
+    Real c=2.*r1-1.;
+    Real s=sqrt(1.-c*c);
+    Real f=twopi*rn(2);
     r1=rn(3);
-    double r2=rn(4);
+    Real r2=rn(4);
     q[i][0]=-log(r1*r2);
     q[i][3]=q[i][0]*c;
     q[i][2]=q[i][0]*s*cos(f);
@@ -219,16 +220,16 @@ vector<double*> rambo(double et, vector<double>& xm, double& wt){
     for (int k=0; k<4; k++)
       r[k]=r[k]+q[i][k];
   }
-  double rmas=sqrt(pow(r[0],2)-pow(r[3],2)-pow(r[2],2)-pow(r[1],2));
+  Real rmas=sqrt(pow(r[0],2)-pow(r[3],2)-pow(r[2],2)-pow(r[1],2));
   for(int k=1;k < 4; k++)
     b[k-1]=-r[k]/rmas;
-  double g=r[0]/rmas;
-  double a=1./(1.+g);
-  double x=et/rmas;
+  Real g=r[0]/rmas;
+  Real a=1./(1.+g);
+  Real x=et/rmas;
 
 // transform the q's conformally into the p's
   for(int i=0; i< n;i++){
-    double bq=b[0]*q[i][1]+b[1]*q[i][2]+b[2]*q[i][3];
+    Real bq=b[0]*q[i][1]+b[1]*q[i][2]+b[2]*q[i][3];
     for (int k=1;k<4;k++)
       p[i][k]=x*(q[i][k]+b[k-1]*(q[i][0]+a*bq));
     p[i][0]=x*(g*q[i][0]+bq);
@@ -253,18 +254,18 @@ vector<double*> rambo(double et, vector<double>& xm, double& wt){
   }
 
 // massive particles: rescale the momenta by a factor x
-  double xmax=sqrt(1.-pow(xmt/et, 2));
+  Real xmax=sqrt(1.-pow(xmt/et, 2));
   for(int i=0;i < n; i++){
     xm2[i]=pow(xm[i],2);
     p2[i]=pow(p[i][0],2);
   }
   int iter=0;
   x=xmax;
-  double accu=et*acc;
+  Real accu=et*acc;
   while(true){
-    double f0=-et;
-    double g0=0.;
-    double x2=x*x;
+    Real f0=-et;
+    Real g0=0.;
+    Real x2=x*x;
     for(int i=0; i < n; i++){
       e[i]=sqrt(xm2[i]+x2*p2[i]);
       f0=f0+e[i];
@@ -286,13 +287,13 @@ vector<double*> rambo(double et, vector<double>& xm, double& wt){
   }
 
 // calculate the mass-effect weight factor
-  double wt2=1.;
-  double wt3=0.;
+  Real wt2=1.;
+  Real wt3=0.;
   for(int i=0;i < n; i++){
     wt2=wt2*v[i]/e[i];
     wt3=wt3+pow(v[i],2)/e[i];
   }
-  double wtm=(2.*n-3.)*log(x)+log(wt2/wt3*et);
+  Real wtm=(2.*n-3.)*log(x)+log(wt2/wt3*et);
 
 // return for  weighted massive momenta
   wt=wt+wtm;

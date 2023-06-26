@@ -787,7 +787,7 @@ class UFOExpressionParserCPP(UFOExpressionParser):
         'expression : NUMBER'
         
         if p[1].endswith('j'):
-            p[0] = 'std::complex<double>(0., %e)'  % float(p[1][:-1]) 
+            p[0] = 'std::complex<Real>(0., %e)'  % float(p[1][:-1])
         else:
             p[0] = ('%e' % float(p[1])).replace('e', 'd')
         
@@ -840,7 +840,7 @@ class UFOExpressionParserCPP(UFOExpressionParser):
 
     def p_expression_complex(self, p):
         "expression : COMPLEX '(' expression ',' expression ')'"
-        p[0] = 'std::complex<double>(' + p[3] + ',' + p[5] + ')'
+        p[0] = 'std::complex<Real>(' + p[3] + ',' + p[5] + ')'
     
     def p_expression_func(self, p):
         '''expression : CSC group

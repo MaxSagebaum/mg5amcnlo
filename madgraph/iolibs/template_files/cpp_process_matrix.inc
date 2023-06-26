@@ -1,10 +1,10 @@
-double %(process_class_name)s::matrix_%(proc_name)s(%(matrix_args)s) { 
+Real %(process_class_name)s::matrix_%(proc_name)s(%(matrix_args)s) {
 %(all_wavefunction_calls)s
 // Local variables
 const int ngraphs = %(ngraphs)d;
 const int ncolor = %(ncolor)d;
-std::complex<double> ztemp;
-std::complex<double> jamp[ncolor];
+std::complex<Real> ztemp;
+std::complex<Real> jamp[ncolor];
 // The color matrix;
 %(color_matrix_lines)s
 
@@ -12,7 +12,7 @@ std::complex<double> jamp[ncolor];
 %(jamp_lines)s
 
 // Sum and square the color flows to get the matrix element
-double matrix = 0;
+Real matrix = 0;
 for(i=0;i < ncolor; i++){
   ztemp = 0.;
   for(j = 0; j < ncolor; j++)

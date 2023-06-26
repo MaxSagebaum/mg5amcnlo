@@ -1,7 +1,7 @@
 LIBDIR=../../lib
 INCDIR=../../src
 MODELLIB=model_%(model)s
-CXXFLAGS= -Ofast -I$(INCDIR) -I.
+CXXFLAGS= -Ofast -I$(INCDIR) -I. -I$(CODI_DIR)/include
 LIBFLAGS= -L$(LIBDIR) -l$(MODELLIB)
 
 main=check

@@ -1343,13 +1343,13 @@ class ALOHAWriterForCPP(WriteALOHA):
 
     type2def = {}    
     type2def['int'] = 'int '
-    type2def['double'] = 'double '
-    type2def['complex'] = 'std::complex<double> '
+    type2def['double'] = 'Real '
+    type2def['complex'] = 'std::complex<Real> '
     
     #variable overwritten by gpu
     realoperator = '.real()'
     imagoperator = '.imag()'
-    ci_definition = 'static std::complex<double> cI = std::complex<double>(0.,1.);\n'
+    ci_definition = 'static std::complex<Real> cI = std::complex<Real>(0.,1.);\n'
     
     
     def change_number_format(self, number):
@@ -1462,10 +1462,10 @@ class ALOHAWriterForCPP(WriteALOHA):
             args.append('%s%s%s'% (type, argname, list_arg))
                 
         if not self.offshell:
-            output = 'std::complex<double> & vertex'
+            output = 'std::complex<Real> & vertex'
             #self.declaration.add(('complex','vertex'))
         else:
-            output = 'std::complex<double> %(spin)s%(id)d[]' % {
+            output = 'std::complex<Real> %(spin)s%(id)d[]' % {
                      'spin': self.particles[self.outgoing -1],
                      'id': self.outgoing}
             self.declaration.add(('list_complex', output))
@@ -1665,7 +1665,7 @@ class ALOHAWriterForCPP(WriteALOHA):
                                         self.write_obj(numerator.get_rep(ind))))
         return out.getvalue()
         
-    remove_double = re.compile(r'std::complex<double> (?P<name>[\w]+)\[\]')
+    remove_double = re.compile(r'std::complex<Real> (?P<name>[\w]+)\[\]')
     def define_symmetry(self, new_nb, couplings=None):
         """Write the call for symmetric routines"""
         number = self.offshell
@@ -1764,8 +1764,8 @@ class ALOHAWriterForCPP(WriteALOHA):
         self.declaration.discard(('complex','COUP'))
         self.declaration.discard(('complex', 'denom'))
         if self.outgoing:
-            self.declaration.discard(('list_double', 'P%s' % self.outgoing))
-            self.declaration.discard(('double', 'OM%s' % self.outgoing))
+            self.declaration.discard(('list_Real', 'P%s' % self.outgoing))
+            self.declaration.discard(('Real', 'OM%s' % self.outgoing))
         for name in aloha_lib.KERNEL.reduced_expr2:
             self.declaration.discard(('complex', name))
         
@@ -1851,7 +1851,7 @@ class ALOHAWriterForGPU(ALOHAWriterForCPP):
     extension = '.cu'
     realoperator = '.re'
     imagoperator = '.im'
-    ci_definition = 'complex<double> cI = mkcmplx(0., 1.);\n'
+    ci_definition = 'complex<Real> cI = mkcmplx(0., 1.);\n'
     
     def get_header_txt(self, name=None, couplings=None, mode=''):
         """Define the Header of the fortran file. This include

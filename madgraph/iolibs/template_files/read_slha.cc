@@ -2,8 +2,9 @@
 #include <iostream>
 #include <fstream>
 #include "read_slha.h"
+#include "ad.h"
 
-void SLHABlock::set_entry(std::vector<int> indices, double value)
+void SLHABlock::set_entry(std::vector<int> indices, Real value)
 {
   if (_entries.size() == 0)
     _indices = indices.size();
@@ -13,7 +14,7 @@ void SLHABlock::set_entry(std::vector<int> indices, double value)
   _entries[indices] = value;
 }
 
-double SLHABlock::get_entry(std::vector<int> indices, double def_val)
+Real SLHABlock::get_entry(std::vector<int> indices, Real def_val)
 {
   if (_entries.find(indices) == _entries.end()){
     std::cout << "Warning: No such entry in " << _name << ", using default value " 
@@ -41,9 +42,9 @@ void SLHAReader::read_slha_file(std::string file_name)
     transform(line.begin(), line.end(), line.begin(), (int(*)(int)) tolower);
     if(line != "" && line[0] != '#'){
       if(block != ""){
-	// Look for double index blocks
+	// Look for Real index blocks
 	double dindex1, dindex2;
-	double value;
+	Real value;
 	std::stringstream linestr2(line);
 	if (linestr2 >> dindex1 >> dindex2 >> value &&
 	    dindex1 == int(dindex1) and dindex2 == int(dindex2))
@@ -85,7 +86,7 @@ void SLHAReader::read_slha_file(std::string file_name)
 	block = "";
 	std::stringstream linestr(line);
 	int pdg_code;
-	double value;
+	Real value;
 	if(linestr >> pdg_code >> value)
 	  set_block_entry("decay", pdg_code, value);
 	else
@@ -101,8 +102,8 @@ void SLHAReader::read_slha_file(std::string file_name)
   param_card.close();
 }
 
-double SLHAReader::get_block_entry(std::string block_name, std::vector<int> indices, 
-				   double def_val)
+Real SLHAReader::get_block_entry(std::string block_name, std::vector<int> indices,
+				   Real def_val)
 {
   if (_blocks.find(block_name) == _blocks.end()){
     std::cout << "No such block " << block_name << ", using default value " 
@@ -112,8 +113,8 @@ double SLHAReader::get_block_entry(std::string block_name, std::vector<int> indi
   return _blocks[block_name].get_entry(indices);  
 }
 
-double SLHAReader::get_block_entry(std::string block_name, int index, 
-				   double def_val)
+Real SLHAReader::get_block_entry(std::string block_name, int index,
+				   Real def_val)
 {
   std::vector<int> indices;
   indices.push_back(index);
@@ -122,7 +123,7 @@ double SLHAReader::get_block_entry(std::string block_name, int index,
 
 
 void SLHAReader::set_block_entry(std::string block_name, std::vector<int> indices, 
-				   double value)
+				   Real value)
 {
   if (_blocks.find(block_name) == _blocks.end()){
     SLHABlock block(block_name);
@@ -136,7 +137,7 @@ void SLHAReader::set_block_entry(std::string block_name, std::vector<int> indice
 }
 
 void SLHAReader::set_block_entry(std::string block_name, int index, 
-				   double value)
+				   Real value)
 {
   std::vector<int> indices;
   indices.push_back(index);

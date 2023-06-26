@@ -38,7 +38,7 @@ void CPPProcess::sigmaKin() {
 //--------------------------------------------------------------------------
 // Evaluate |M|^2, including incoming flavour dependence. 
 
-double CPPProcess::sigmaHat() {  
+Real CPPProcess::sigmaHat() {
     %(sigmaHat_lines)s
 }
 

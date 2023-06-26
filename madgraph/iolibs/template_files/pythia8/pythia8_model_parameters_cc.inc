@@ -4,6 +4,7 @@
 //==========================================================================
 
 #include <iostream>
+#include "ad.h"
 #include "Parameters_%(model_name)s.h"
 #include "%(include_prefix)sPythiaStdlib.h"
 
@@ -27,7 +28,7 @@ void Parameters_%(model_name)s::setIndependentCouplings(){
 %(set_independent_couplings)s
 }
 
-void Parameters_%(model_name)s::setDependentParameters(ParticleData*& pd, Couplings*& csm, SusyLesHouches*& slhaPtr, double alpS){
+void Parameters_%(model_name)s::setDependentParameters(ParticleData*& pd, Couplings*& csm, SusyLesHouches*& slhaPtr, Real alpS){
 %(set_dependent_parameters)s
 }
 
