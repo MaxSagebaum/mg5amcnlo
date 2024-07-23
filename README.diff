@@ -1,0 +1,8 @@
+#After checking out:
+git submodule init
+git submodule update
+
+#In the bash do:
+export CODI_DIR=$PWD/CoDiPack
+
+#Otherwise normal use
